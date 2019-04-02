@@ -47,9 +47,18 @@ var app = new Vue({
       return Math.round((this.portionsToDoSecondsEach / 60) * 10) / 10;
     },
     timeUsedPercentage: function () {
+      return ((this.state.secondsPassed * 100) / (this.settings.minutes * 60))
+    },
+    timeUsedPercentageActualPortion: function () {
       return ((this.state.actualPortionSecondsPassed * 100) / this.portionsToDoSecondsEach)
     },
     timeUsedHumanFormat: function () {
+      var minutes = Math.trunc(this.state.secondsPassed / 60)
+      var seconds = (this.state.secondsPassed % 60)
+
+      return minutes + " minutes and " + seconds + " seconds";
+    },
+    timeUsedActualPortionHumanFormat: function () {
       var minutes = Math.trunc(this.state.actualPortionSecondsPassed / 60)
       var seconds = (this.state.actualPortionSecondsPassed % 60)
 

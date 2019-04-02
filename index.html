@@ -48,12 +48,18 @@
         </p>
 
         <p>
+          <div class="progress">
+            <div class="progress-bar bg-info" role="progressbar" v-bind:style="{ width: timeUsedPercentage + '%' }" v-bind:aria-valuenow="timeUsedPercentage" aria-valuemin="0" aria-valuemax="100">{{ timeUsedHumanFormat }}</div>
+          </div>
+        </p>
+
+        <p>
           {{ portionsToDoCount }} portions missing, we have {{ portionsToDoMinutesEach }} minutes per portion.
         </p>
 
         <p>
           <div class="progress">
-            <div class="progress-bar bg-info" role="progressbar" v-bind:style="{ width: timeUsedPercentage + '%' }" v-bind:aria-valuenow="timeUsedPercentage" aria-valuemin="0" aria-valuemax="100">{{ timeUsedHumanFormat }}</div>
+            <div class="progress-bar bg-info" role="progressbar" v-bind:style="{ width: timeUsedPercentageActualPortion + '%' }" v-bind:aria-valuenow="timeUsedPercentageActualPortion" aria-valuemin="0" aria-valuemax="100">{{ timeUsedActualPortionHumanFormat }}</div>
           </div>
         </p>
 
