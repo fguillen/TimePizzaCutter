@@ -31,7 +31,10 @@
 
           <div class="form-group row">
             <div class="col-sm-10">
-              <button v-on:click.prevent="start" class="btn btn-primary">Start</button>
+              <button v-if="showStartButton" v-on:click.prevent="start" class="btn btn-primary">Start</button>
+              <button v-if="showPauseButton" v-on:click.prevent="pause" class="btn btn-primary">Pause</button>
+              <button v-if="showResetButton" v-on:click.prevent="reset" class="btn btn-primary">Reset</button>
+              <button v-if="showResumeButton" v-on:click.prevent="resume" class="btn btn-primary">Resume</button>
             </div>
           </div>
         </form>

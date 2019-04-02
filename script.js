@@ -9,6 +9,7 @@ var app = new Vue({
       secondsPassed: 0,
       portionsDoneSeconds: [],
       actualPortionSecondsPassed: 0,
+      started: false,
       paused: true
     }
   },
@@ -53,6 +54,18 @@ var app = new Vue({
       var seconds = (this.state.actualPortionSecondsPassed % 60)
 
       return minutes + " minutes and " + seconds + " seconds";
+    },
+    showStartButton: function () {
+      return !this.state.started;
+    },
+    showPauseButton: function () {
+      return this.state.started && !this.state.paused;
+    },
+    showResetButton: function () {
+      return this.state.started && this.state.paused;
+    },
+    showResumeButton: function () {
+      return this.state.started && this.state.paused;
     }
   },
   methods: {
@@ -67,11 +80,32 @@ var app = new Vue({
       }
     },
     start: function() {
+      this.reset();
+
+      this.state.paused = false;
+      this.state.started = true;
+
+      this.increaseSecond();
+    },
+    reset: function() {
       console.log("start()");
 
       this.state.secondsPassed = 0;
       this.state.portionsDoneSeconds = [];
       this.state.actualPortionSecondsPassed = 0;
+      this.state.paused = true;
+      this.state.started = false;
+    },
+    pause: function() {
+      console.log("pause()");
+
+      this.state.paused = true;
+
+      this.increaseSecond();
+    },
+    resume: function() {
+      console.log("resume()");
+
       this.state.paused = false;
 
       this.increaseSecond();
