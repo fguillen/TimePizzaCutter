@@ -48,6 +48,10 @@ section#the-time-pizza p {
   font-size: 1.4em;
 }
 
+section#the-time-pizza p.small {
+  font-size: 1em;
+}
+
 .highlight {
   text-decoration: underline;
   color: rgba(240, 200, 8, 1);
@@ -62,7 +66,17 @@ section#the-time-pizza p {
 .btn-primary:active,
 .btn-primary:visited,
 .btn-primary:focus {
-    background-color: rgba(240, 200, 8, 1);
-    border-color: rgba(240, 200, 8, 1);
-    color: rgba(8, 103, 136, 1);
+  background-color: rgba(240, 200, 8, 1);
+  border-color: rgba(240, 200, 8, 1);
+  color: rgba(8, 103, 136, 1);
 }
+
+.bg-info {
+  background-color: rgba(221, 73, 0, 1) !important;
+}
+
+/*.form-control,
+.progress {
+  background-color: rgba(254, 250, 209, 1);
+}
+*/

@@ -51,22 +51,24 @@
           at <span class="highlight">{{ portionsDoneMinutesAverage }} minutes</span> per portion.
         </p>
 
-        <p>
+        <div>
           <div class="progress">
-            <div class="progress-bar bg-info" role="progressbar" v-bind:style="{ width: timeUsedPercentage + '%' }" v-bind:aria-valuenow="timeUsedPercentage" aria-valuemin="0" aria-valuemax="100">{{ timeUsedHumanFormat }}</div>
+            <div class="progress-bar bg-info" role="progressbar" v-bind:style="{ width: timeLeftPercentage + '%' }" v-bind:aria-valuenow="timeLeftPercentage" aria-valuemin="0" aria-valuemax="100"></div>
           </div>
-        </p>
+          <p class="text-right small">{{ timeLeftHumanFormat }}</p>
+        </div>
 
         <p>
-          You still have <span class="highlight">{{ portionsToDoCount }} portions</span> missing,
+          You still have <span class="highlight">{{ portionsToDoCount }} portions</span> left,
           proportional distributed you have <span class="highlight">{{ portionsToDoMinutesEach }} minutes</span> per portion.
         </p>
 
-        <p>
+        <div>
           <div class="progress">
-            <div class="progress-bar bg-info" role="progressbar" v-bind:style="{ width: timeUsedPercentageActualPortion + '%' }" v-bind:aria-valuenow="timeUsedPercentageActualPortion" aria-valuemin="0" aria-valuemax="100">{{ timeUsedActualPortionHumanFormat }}</div>
+            <div class="progress-bar bg-info" role="progressbar" v-bind:style="{ width: timeLeftPercentageActualPortion + '%' }" v-bind:aria-valuenow="timeLeftPercentageActualPortion" aria-valuemin="0" aria-valuemax="100"></div>
           </div>
-        </p>
+          <p class="text-right small">{{ timeLeftActualPortionHumanFormat }}</p>
+        </div>
 
         <p>
           <form>

@@ -49,18 +49,26 @@ var app = new Vue({
     timeUsedPercentage: function () {
       return ((this.state.secondsPassed * 100) / (this.settings.minutes * 60))
     },
+    timeLeftPercentage: function () {
+      return 100 - this.timeUsedPercentage;
+    },
     timeUsedPercentageActualPortion: function () {
       return ((this.state.actualPortionSecondsPassed * 100) / this.portionsToDoSecondsEach)
     },
-    timeUsedHumanFormat: function () {
-      var minutes = Math.trunc(this.state.secondsPassed / 60)
-      var seconds = (this.state.secondsPassed % 60)
+    timeLeftPercentageActualPortion: function () {
+      return 100 - this.timeUsedPercentageActualPortion;
+    },
+    timeLeftHumanFormat: function () {
+      var totalSeconds = (this.settings.minutes * 60) - this.state.secondsPassed;
+      var minutes = Math.trunc(totalSeconds / 60)
+      var seconds = (totalSeconds % 60)
 
       return minutes + " minutes and " + seconds + " seconds";
     },
-    timeUsedActualPortionHumanFormat: function () {
-      var minutes = Math.trunc(this.state.actualPortionSecondsPassed / 60)
-      var seconds = (this.state.actualPortionSecondsPassed % 60)
+    timeLeftActualPortionHumanFormat: function () {
+      var totalSeconds = Math.trunc(this.portionsToDoSecondsEach) - this.state.actualPortionSecondsPassed;
+      var minutes = Math.trunc(totalSeconds / 60)
+      var seconds = (totalSeconds % 60)
 
       return minutes + " minutes and " + seconds + " seconds";
     },
