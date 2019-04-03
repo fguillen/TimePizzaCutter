@@ -4,14 +4,17 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="./style.css">
 
     <title>TimePizzaCutter</title>
   </head>
   <body>
     <div class="container" id="app">
-      <h1>TimePizzaCutter</h1>
-      <section>
-        <h2>Define your Time Size and Portions</h2>
+      <section id="header">
+        <h1>TimePizzaCutter</h1>
+      </section>
+      <section id="settings">
+        <h3>Define your Time Size and Portions</h3>
         <form>
           <div class="form-group row">
             <label for="minutes" class="col-sm-2 col-form-label">Size</label>
@@ -31,20 +34,21 @@
 
           <div class="form-group row">
             <div class="col-sm-10">
-              <button v-if="showStartButton" v-on:click.prevent="start" class="btn btn-primary">Start</button>
+              <button v-if="showStartButton" v-on:click.prevent="start" class="btn btn-primary btn-lg btn-block">Start</button>
               <button v-if="showPauseButton" v-on:click.prevent="pause" class="btn btn-primary">Pause</button>
-              <button v-if="showResetButton" v-on:click.prevent="reset" class="btn btn-primary">Reset</button>
               <button v-if="showResumeButton" v-on:click.prevent="resume" class="btn btn-primary">Resume</button>
+              <button v-if="showResetButton" v-on:click.prevent="reset" class="btn btn-primary">Reset</button>
             </div>
           </div>
         </form>
       </section>
 
-      <section>
+      <section id="the-time-pizza">
         <h2>the Time Pizza</h2>
 
         <p>
-          {{ portionsDoneCount }} portions done at {{ portionsDoneMinutesAverage }}  minutes per portion.
+          You have done <span class="highlight">{{ portionsDoneCount }} portions</span>
+          at <span class="highlight">{{ portionsDoneMinutesAverage }} minutes</span> per portion.
         </p>
 
         <p>
@@ -54,7 +58,8 @@
         </p>
 
         <p>
-          {{ portionsToDoCount }} portions missing, we have {{ portionsToDoMinutesEach }} minutes per portion.
+          You still have <span class="highlight">{{ portionsToDoCount }} portions</span> missing,
+          proportional distributed you have <span class="highlight">{{ portionsToDoMinutesEach }} minutes</span> per portion.
         </p>
 
         <p>
@@ -66,10 +71,14 @@
         <p>
           <form>
             <div class="form-group row">
-              <div class="col-sm-10">
-                <button v-on:click.prevent="portionDone" class="btn btn-primary">Portion done</button>
+              <div class="col">
+                <button v-on:click.prevent="portionDone" class="btn btn-primary btn-lg btn-block">Portion done</button>
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col text-right">
                 or
-                <button v-on:click.prevent="portionUndone"  class="btn btn-primary">Portion undone</button>
+                <button v-on:click.prevent="portionUndone"  class="btn btn-primary btn-sm">Portion undone</button>
               </div>
             </div>
           </form>

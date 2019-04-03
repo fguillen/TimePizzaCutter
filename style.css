@@ -1,0 +1,49 @@
+/*
+color1: rgba(6, 174, 213, 1);
+color2: rgba(8, 103, 136, 1);
+color3: rgba(240, 200, 8, 1);
+color4: rgba(254, 250, 209, 1);
+color5: rgba(221, 73, 0, 1);
+*/
+
+body {
+  background-color: rgba(8, 103, 136, 1);
+  color: rgba(254, 250, 209, 1);
+}
+
+section#header {
+  background-color: rgba(240, 200, 8, 1);
+  padding: 1em;
+  text-align: center;
+  color: rgba(8, 103, 136, 1);
+  margin-bottom: 1em;
+}
+
+section#settings {
+
+}
+
+section#the-time-pizza {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  border: 1px solid rgba(6, 174, 213, 1);
+  padding: 0.5em 1em;
+}
+
+.highlight {
+  text-decoration: underline;
+  color: rgba(240, 200, 8, 1);
+/*  text-decoration-style: dashed;
+  text-decoration-line: underline;*/
+}
+
+/* Bootstrap override */
+.btn-primary,
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary:visited,
+.btn-primary:focus {
+    background-color: rgba(240, 200, 8, 1);
+    border-color: rgba(240, 200, 8, 1);
+    color: rgba(8, 103, 136, 1);
+}
