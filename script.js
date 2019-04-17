@@ -84,28 +84,17 @@ var app = new Vue({
     showStartButton: function () {
       return !this.state.started;
     },
-    showPauseButton: function () {
-      return this.state.started && !this.state.paused;
-    },
     showResetButton: function () {
-      return this.state.started && this.state.paused;
-    },
-    showResumeButton: function () {
-      return this.state.started && this.state.paused;
+      return this.state.started;
     }
   },
   methods: {
     increaseSecond: function() {
       console.log("increaseSecond()");
-      console.log("startingTime", this.state.startingTime);
-      console.log("secondsPassed", this.secondsPassed);
-      console.log("portionStartingTime", this.state.portionStartingTime);
-      console.log("this.state.startingTime", this.state.startingTime);
-      console.log("diff", ((new Date()) - this.state.startingTime) / 1000);
 
       this.state.actualTime = new Date();
 
-      if(!this.state.paused) {
+      if(this.state.started) {
         setTimeout(this.increaseSecond, 1000);
       }
     },
@@ -113,7 +102,6 @@ var app = new Vue({
       this.reset();
 
       this.state.actualTime = new Date();
-      this.state.paused = false;
       this.state.started = true;
       this.state.startingTime = new Date();
       this.state.portionStartingTime = new Date();
@@ -123,24 +111,11 @@ var app = new Vue({
     reset: function() {
       console.log("start()");
 
-      this.state.startingTime = null;
-      this.state.portionStartingTime = null;
+      this.state.startingTime = new Date();
+      this.state.portionStartingTime = new Date();
+      this.state.actualTime = new Date();
       this.state.portionsDoneSeconds = [];
       this.state.started = false;
-    },
-    pause: function() {
-      console.log("pause()");
-
-      this.state.paused = true;
-
-      this.increaseSecond();
-    },
-    resume: function() {
-      console.log("resume()");
-
-      this.state.paused = false;
-
-      this.increaseSecond();
     },
     portionDone: function() {
       console.log("portionDone()");
