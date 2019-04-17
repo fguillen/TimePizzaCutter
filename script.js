@@ -6,11 +6,14 @@ var app = new Vue({
       portions: 5
     },
     state: {
+      actualTime: null,
+      startingTime: null,
+      portionStartingTime: null,
       secondsPassed: 0,
+      portionSecondsPassed: 0,
       portionsDoneSeconds: [],
-      actualPortionSecondsPassed: 0,
-      started: false,
-      paused: true
+      portionSecondsPassed: 0,
+      started: false
     }
   },
   computed: {
@@ -33,8 +36,14 @@ var app = new Vue({
     portionsDoneMinutesAverage: function () {
       return Math.round((this.portionsDoneSecondsAverage / 60) * 10) / 10;
     },
+    portionSecondsPassed: function() {
+      return Math.round((this.state.actualTime - this.state.portionStartingTime) / 1000);
+    },
+    secondsPassed: function() {
+      return Math.round((this.state.actualTime - this.state.startingTime) / 1000);
+    },
     secondsLeft: function() {
-      return ((this.settings.minutes * 60) - this.state.secondsPassed);
+      return ((this.settings.minutes * 60) - this.secondsPassed);
     },
     portionsToDoSecondsEach: function () {
       if(this.portionsToDoCount === 0 || this.secondsLeft === 0) {
@@ -47,26 +56,26 @@ var app = new Vue({
       return Math.round((this.portionsToDoSecondsEach / 60) * 10) / 10;
     },
     timeUsedPercentage: function () {
-      return ((this.state.secondsPassed * 100) / (this.settings.minutes * 60))
+      return ((this.secondsPassed * 100) / (this.settings.minutes * 60))
     },
     timeLeftPercentage: function () {
       return 100 - this.timeUsedPercentage;
     },
     timeUsedPercentageActualPortion: function () {
-      return ((this.state.actualPortionSecondsPassed * 100) / this.portionsToDoSecondsEach)
+      return ((this.portionSecondsPassed * 100) / this.portionsToDoSecondsEach)
     },
     timeLeftPercentageActualPortion: function () {
       return 100 - this.timeUsedPercentageActualPortion;
     },
     timeLeftHumanFormat: function () {
-      var totalSeconds = (this.settings.minutes * 60) - this.state.secondsPassed;
+      var totalSeconds = (this.settings.minutes * 60) - this.secondsPassed;
       var minutes = Math.trunc(totalSeconds / 60)
       var seconds = (totalSeconds % 60)
 
       return minutes + " minutes and " + seconds + " seconds";
     },
     timeLeftActualPortionHumanFormat: function () {
-      var totalSeconds = Math.trunc(this.portionsToDoSecondsEach) - this.state.actualPortionSecondsPassed;
+      var totalSeconds = Math.trunc(this.portionsToDoSecondsEach) - this.portionSecondsPassed;
       var minutes = Math.trunc(totalSeconds / 60)
       var seconds = (totalSeconds % 60)
 
@@ -88,9 +97,13 @@ var app = new Vue({
   methods: {
     increaseSecond: function() {
       console.log("increaseSecond()");
+      console.log("startingTime", this.state.startingTime);
+      console.log("secondsPassed", this.secondsPassed);
+      console.log("portionStartingTime", this.state.portionStartingTime);
+      console.log("this.state.startingTime", this.state.startingTime);
+      console.log("diff", ((new Date()) - this.state.startingTime) / 1000);
 
-      this.state.actualPortionSecondsPassed ++;
-      this.state.secondsPassed ++;
+      this.state.actualTime = new Date();
 
       if(!this.state.paused) {
         setTimeout(this.increaseSecond, 1000);
@@ -99,18 +112,20 @@ var app = new Vue({
     start: function() {
       this.reset();
 
+      this.state.actualTime = new Date();
       this.state.paused = false;
       this.state.started = true;
+      this.state.startingTime = new Date();
+      this.state.portionStartingTime = new Date();
 
       this.increaseSecond();
     },
     reset: function() {
       console.log("start()");
 
-      this.state.secondsPassed = 0;
+      this.state.startingTime = null;
+      this.state.portionStartingTime = null;
       this.state.portionsDoneSeconds = [];
-      this.state.actualPortionSecondsPassed = 0;
-      this.state.paused = true;
       this.state.started = false;
     },
     pause: function() {
@@ -134,8 +149,8 @@ var app = new Vue({
         return;
       }
 
-      this.state.portionsDoneSeconds.push(this.state.actualPortionSecondsPassed);
-      this.state.actualPortionSecondsPassed = 0;
+      this.state.portionsDoneSeconds.push(this.portionSecondsPassed);
+      this.state.portionStartingTime = new Date();
     },
     portionUndone: function() {
       console.log("portionUndone()");
@@ -145,7 +160,7 @@ var app = new Vue({
       }
 
       var timeLastPortion = this.state.portionsDoneSeconds.pop();
-      this.state.actualPortionSecondsPassed = this.state.actualPortionSecondsPassed + timeLastPortion;
+      this.state.portionStartingTime = new Date(this.state.portionStartingTime - (this.portionSecondsPassed * 1000));
     }
   }
 })
