@@ -75,6 +75,13 @@ section#the-time-pizza p.small {
   background-color: rgba(221, 73, 0, 1) !important;
 }
 
+.progress-container .col-11 {
+  padding: 0;
+}
+.progress-container .progress {
+  margin-top: 4px;
+}
+
 /*.form-control,
 .progress {
   background-color: rgba(254, 250, 209, 1);

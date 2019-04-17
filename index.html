@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="./style.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 
     <title>Time Pizza Cutter</title>
   </head>
@@ -49,11 +50,27 @@
           at <span class="highlight">{{ portionsDoneMinutesAverage }} minutes</span> per portion.
         </p>
 
-        <div>
-          <div class="progress">
-            <div class="progress-bar bg-info" role="progressbar" v-bind:style="{ width: timeLeftPercentage + '%' }" v-bind:aria-valuenow="timeLeftPercentage" aria-valuemin="0" aria-valuemax="100"></div>
+        <!-- Progress bar -->
+        <div class="container progress-container">
+          <div class="row">
+            <div class="col-11">
+              <div class="progress">
+                <div class="progress-bar bg-info" role="progressbar" v-bind:style="{ width: timeLeftPercentage + '%' }" v-bind:aria-valuenow="timeLeftPercentage" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </div>
+
+            <div class="bell text-center col-1">
+              <i v-if="showBellActive" v-on:click="deactiveBell" class="fas fa-bell"></i>
+              <i v-if="showBellNoActive" v-on:click="activeBell" class="fas fa-bell-slash"></i>
+              <i v-if="showBellRinging" v-on:click="muteBell" class="fas fa-concierge-bell"></i>
+            </div>
           </div>
-          <p class="text-right small">{{ timeLeftHumanFormat }}</p>
+
+          <div class="row">
+            <div class="col-11">
+              <p class="text-right small">{{ timeLeftHumanFormat }}</p>
+            </div>
+          </div>
         </div>
 
         <p>
@@ -61,11 +78,28 @@
           proportional distributed you have <span class="highlight">{{ portionsToDoMinutesEach }} minutes</span> per portion.
         </p>
 
-        <div>
-          <div class="progress">
-            <div class="progress-bar bg-info" role="progressbar" v-bind:style="{ width: timeLeftPercentageActualPortion + '%' }" v-bind:aria-valuenow="timeLeftPercentageActualPortion" aria-valuemin="0" aria-valuemax="100"></div>
+
+        <!-- Portion Progress bar -->
+        <div class="container progress-container">
+          <div class="row">
+            <div class="col-11">
+              <div class="progress">
+                <div class="progress-bar bg-info" role="progressbar" v-bind:style="{ width: timeLeftPercentageActualPortion + '%' }" v-bind:aria-valuenow="timeLeftPercentageActualPortion" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </div>
+
+            <div class="bell text-center col-1">
+              <i v-if="showPortionBellActive" v-on:click="portionDeactiveBell" class="fas fa-bell"></i>
+              <i v-if="showPortionBellNoActive" v-on:click="portionActiveBell" class="fas fa-bell-slash"></i>
+              <i v-if="showPortionBellRinging" v-on:click="portionMuteBell" class="fas fa-concierge-bell"></i>
+            </div>
           </div>
-          <p class="text-right small">{{ timeLeftActualPortionHumanFormat }}</p>
+
+          <div class="row">
+            <div class="col-11">
+              <p class="text-right small">{{ timeLeftActualPortionHumanFormat }}</p>
+            </div>
+          </div>
         </div>
 
         <p>

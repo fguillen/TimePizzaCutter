@@ -6,9 +6,10 @@
 - Add a "how it works" instructions info text
 - Make texts more intelligent (no 0 portions done in 0 seconds)
 - Make a mobile App
-- Sound alert
+
 
 ## Done
 
 X Make time progress bars to works reverse: https://www.timeanddate.com/timer/
+X Sound alert
 

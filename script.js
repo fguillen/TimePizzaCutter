@@ -1,3 +1,6 @@
+var version = "0.1.0"
+console.log("Loading app version", version);
+
 var app = new Vue({
   el: '#app',
   data: {
@@ -6,15 +9,27 @@ var app = new Vue({
       portions: 5
     },
     state: {
+      bellActive: false,
+      bellRinging: false,
+      bellMuted: false,
+      portionBellActive: false,
+      portionBellRinging: false,
+      portionBellMuted: false,
       actualTime: null,
       startingTime: null,
       portionStartingTime: null,
       secondsPassed: 0,
       portionSecondsPassed: 0,
       portionsDoneSeconds: [],
-      portionSecondsPassed: 0,
-      started: false
+      started: false,
+      bellSound: null,
+      portionBellSound: null
     }
+  },
+  created: function() {
+    console.log("created()");
+    this.state.bellSound = new Audio("./bell.mp3");
+    this.state.portionBellSound = new Audio("./bell.mp3");
   },
   computed: {
     portionsDoneCount: function () {
@@ -39,6 +54,9 @@ var app = new Vue({
     portionSecondsPassed: function() {
       return Math.round((this.state.actualTime - this.state.portionStartingTime) / 1000);
     },
+    portionSecondsLeft: function() {
+      return Math.round(this.portionsToDoSecondsEach) - this.portionSecondsPassed;
+    },
     secondsPassed: function() {
       return Math.round((this.state.actualTime - this.state.startingTime) / 1000);
     },
@@ -56,28 +74,38 @@ var app = new Vue({
       return Math.round((this.portionsToDoSecondsEach / 60) * 10) / 10;
     },
     timeUsedPercentage: function () {
-      return ((this.secondsPassed * 100) / (this.settings.minutes * 60))
+      var result = ((this.secondsPassed * 100) / (this.settings.minutes * 60));
+
+      if(result > 100) {
+        result = 100;
+      }
+
+      return result;
     },
     timeLeftPercentage: function () {
-      return 100 - this.timeUsedPercentage;
+      return (100 - this.timeUsedPercentage);
     },
     timeUsedPercentageActualPortion: function () {
-      return ((this.portionSecondsPassed * 100) / this.portionsToDoSecondsEach)
+      var result = ((this.portionSecondsPassed * 100) / this.portionsToDoSecondsEach);
+
+      if(result > 100) {
+        result = 100;
+      }
+
+      return result;
     },
     timeLeftPercentageActualPortion: function () {
       return 100 - this.timeUsedPercentageActualPortion;
     },
     timeLeftHumanFormat: function () {
-      var totalSeconds = (this.settings.minutes * 60) - this.secondsPassed;
-      var minutes = Math.trunc(totalSeconds / 60)
-      var seconds = (totalSeconds % 60)
+      var minutes = Math.round(this.secondsLeft / 60)
+      var seconds = (this.secondsLeft % 60)
 
       return minutes + " minutes and " + seconds + " seconds";
     },
     timeLeftActualPortionHumanFormat: function () {
-      var totalSeconds = Math.trunc(this.portionsToDoSecondsEach) - this.portionSecondsPassed;
-      var minutes = Math.trunc(totalSeconds / 60)
-      var seconds = (totalSeconds % 60)
+      var minutes = Math.round(this.portionSecondsLeft / 60)
+      var seconds = (this.portionSecondsLeft % 60)
 
       return minutes + " minutes and " + seconds + " seconds";
     },
@@ -86,6 +114,33 @@ var app = new Vue({
     },
     showResetButton: function () {
       return this.state.started;
+    },
+    showBellActive: function () {
+      return this.state.bellActive && !this.state.bellRinging;
+    },
+    showBellNoActive: function () {
+      return !this.state.bellActive && !this.state.bellRinging;
+    },
+    showBellRinging: function () {
+      return this.state.bellRinging;
+    },
+    showPortionBellActive: function () {
+      return this.state.portionBellActive && !this.state.portionBellRinging;
+    },
+    showPortionBellNoActive: function () {
+      return !this.state.portionBellActive && !this.state.portionBellRinging;
+    },
+    showPortionBellRiging: function () {
+      return this.state.portionBellRinging;
+    },
+    showPortionBellRinging: function () {
+      return this.state.portionBellRinging;
+    },
+    timeout: function() {
+      return this.secondsLeft < 0
+    },
+    portionTimeout: function() {
+      return this.portionSecondsLeft < 0;
     }
   },
   methods: {
@@ -93,6 +148,8 @@ var app = new Vue({
       console.log("increaseSecond()");
 
       this.state.actualTime = new Date();
+      this.checkTimeout();
+      this.checkTimeoutPortion();
 
       if(this.state.started) {
         setTimeout(this.increaseSecond, 1000);
@@ -116,6 +173,10 @@ var app = new Vue({
       this.state.actualTime = new Date();
       this.state.portionsDoneSeconds = [];
       this.state.started = false;
+      this.state.bellMuted = false
+      this.state.bellRinging = false
+      this.state.portionBellRinging = false
+      this.state.portionBellMuted = false
     },
     portionDone: function() {
       console.log("portionDone()");
@@ -126,6 +187,8 @@ var app = new Vue({
 
       this.state.portionsDoneSeconds.push(this.portionSecondsPassed);
       this.state.portionStartingTime = new Date();
+      this.state.portionBellMuted = false
+      this.state.portionBellRinging = false
     },
     portionUndone: function() {
       console.log("portionUndone()");
@@ -136,6 +199,66 @@ var app = new Vue({
 
       var timeLastPortion = this.state.portionsDoneSeconds.pop();
       this.state.portionStartingTime = new Date(this.state.portionStartingTime - (this.portionSecondsPassed * 1000));
+    },
+    deactiveBell: function() {
+      console.log("deactiveBell");
+      this.state.bellActive = false;
+    },
+    activeBell: function() {
+      console.log("activeBell");
+      this.state.bellActive = true;
+    },
+    muteBell: function() {
+      console.log("muteBell()");
+      this.state.bellMuted = true;
+      this.state.bellRinging = false;
+    },
+    portionDeactiveBell: function() {
+      console.log("portionDeactiveBell");
+      this.state.portionBellActive = false;
+    },
+    portionActiveBell: function() {
+      console.log("portionActiveBell");
+      this.state.portionBellActive = true;
+    },
+    portionMuteBell: function() {
+      console.log("portionMuteBell()");
+      this.state.portionBellMuted = true;
+      this.state.portionBellRinging = false;
+    },
+    checkTimeout: function() {
+      console.log("checkTimeout()", this.timeout);
+
+      if(this.timeout){
+        if(!this.state.bellMuted) {
+          this.state.bellRinging = true;
+        }
+
+        if(this.state.bellActive && !this.state.bellMuted) {
+          this.soundBell()
+        };
+      }
+    },
+    checkTimeoutPortion: function() {
+      console.log("checkTimeoutPortion()");
+
+      if(this.portionTimeout){
+        if(!this.state.portionBellMuted) {
+          this.state.portionBellRinging = true;
+        }
+
+        if(this.state.portionBellActive && !this.state.portionBellMuted) {
+          this.soundPortionBell();
+        }
+      }
+    },
+    soundBell: function() {
+      console.log("soundBell()");
+      this.state.bellSound.play();
+    },
+    soundPortionBell: function() {
+      console.log("soundPortionBell()");
+      this.state.portionBellSound.play();
     }
   }
 })
